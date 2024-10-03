@@ -1,5 +1,6 @@
 import {User} from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
+import { generateTokenAndSetCookie } from "../utils/generateToken.js";
 
 export async function signup(req, res) {
 	try {
@@ -46,7 +47,7 @@ export async function signup(req, res) {
 		});
     //postman test
 
-		// generateTokenAndSetCookie(newUser._id, res);
+		generateTokenAndSetCookie(newUser._id, res);
 		await newUser.save();
     
     //remove password from the res
