@@ -1,4 +1,5 @@
-import {User} from "../models/user.model.js"
+import {User} from "../models/user.model.js";
+import bcryptjs from "bcryptjs";
 
 export async function signup(req, res) {
 	try {
@@ -30,8 +31,8 @@ export async function signup(req, res) {
 			return res.status(400).json({ success: false, message: "Username already exists" });
 		}
 
-		// const salt = await bcryptjs.genSalt(10);
-		// const hashedPassword = await bcryptjs.hash(password, salt);
+		const salt = await bcryptjs.genSalt(10);
+		const hashedPassword = await bcryptjs.hash(password, salt);
 
 		const PROFILE_PICS = ["/avatar1.png", "/avatar2.png", "/avatar3.png"];
 
@@ -39,7 +40,7 @@ export async function signup(req, res) {
 
 		const newUser = new User({
 			email,
-			password,
+			password: hashedPassword,
 			username,
 			image,
 		});
