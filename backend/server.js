@@ -1,4 +1,5 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 
 import authRoutes from "./routes/auth.route.js"
@@ -16,6 +17,7 @@ const app = express();
 const PORT = ENV_VARS.PORT
 
 app.use(express.json()); //allow parse req.body
+app.use(cookieParser());
 
 app.use("/api/v1/auth",authRoutes)
 app.use("/api/v1/movie",protectRoute, movieRoutes)
