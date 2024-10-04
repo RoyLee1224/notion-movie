@@ -23,6 +23,10 @@ const userSchema = mongoose.Schema({
 		type: Array,
 		default: [],
 	},
+	isAdmin:{
+		type:Boolean,
+		default: false,
+	}
 });
 
 export const User = mongoose.model("User", userSchema);
