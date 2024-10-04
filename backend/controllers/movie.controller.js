@@ -58,3 +58,8 @@ export async function getMoviesByCategory(req, res) {
 		res.status(500).json({ success: false, message: "Internal Server Error" });
 	}
 }
+
+
+// getImdbMovies
+// getRecommendMovies
+// getWatchedMovies
