@@ -4,13 +4,14 @@
   "description": "",
   "main": "backend/server.js",
   "scripts": {
-    "dev":"node --watch backend/server.js"
+    "dev": "node --watch backend/server.js"
   },
   "keywords": [],
   "author": "",
-  "type":"module",
+  "type": "module",
   "license": "ISC",
   "dependencies": {
+    "@notionhq/client": "^2.2.15",
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
