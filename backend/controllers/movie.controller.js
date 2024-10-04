@@ -59,7 +59,4 @@ export async function getMoviesByCategory(req, res) {
 	}
 }
 
-
-// getImdbMovies
-// getRecommendMovies
-// getWatchedMovies
+// getMoviesByList
