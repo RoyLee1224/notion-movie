@@ -20,21 +20,37 @@ const notion = new Client({ auth: ENV_VARS.NOTION_API_KEY });
 // 呼叫測試函數:node backend/services/notion.service.js
 // testNotionConnection()
 
+
 // 從 Notion 資料庫中獲取電影資料
 export const fetchMoviesFromNotion = async () => {
     try {
-        const response = await notion.databases.query({
-            database_id: ENV_VARS.NOTION_DATABASE_ID,
-        });
+        let movies = [];
+        let hasMore = true;
+        let startCursor = undefined;
 
-        // 將 Notion 頁面轉換為所需的電影格式
-        const movies = response.results.map(page => ({
-            title: page.properties.Title.title[0]?.text?.content || 'No Title',
-            rating_gg: page.properties.Rating?.number || 0,  // Notion 中的 GG 評分
-            rank_imdb: page.properties.imdb?.number || 0  // Notion 中的 IMDB 排名
-        }));
+        while (hasMore) {
+            const response = await notion.databases.query({
+                database_id: ENV_VARS.NOTION_DATABASE_ID,
+                page_size: 100,  // 每次最多取100筆資料
+                start_cursor: startCursor,  // 如果有更多的資料，使用 cursor 來獲取
+            });
 
-        return movies;  // 返回電影清單
+            // 將 Notion 頁面轉換為所需的電影格式
+            const fetchedMovies = response.results.map(page => ({
+                title: page.properties.Title.title[0]?.text?.content || 'No Title',
+                rating_gg: page.properties.Rating?.number ?? null,  // 包括 null 作為合法值
+                rank_imdb: page.properties.imdb?.number ?? null  // 包括 null 作為合法值
+            }));
+
+            // 合併每次的結果
+            movies = [...movies, ...fetchedMovies];
+
+            // 檢查是否還有更多資料
+            hasMore = response.has_more;
+            startCursor = response.next_cursor;  // 更新 cursor
+        }
+
+        return movies;  // 返回所有電影清單
     } catch (error) {
         console.error('Failed to fetch movies from Notion:', error.message);
         throw new Error('Failed to fetch movies from Notion');

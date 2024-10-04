@@ -12,17 +12,16 @@ export const syncMoviesFromNotion = async (req, res) => {
         const ggRecommend = [];
         const ggWatched = [];
 
-				console.log('Notion Movies:', notionMovies);  // 檢查 Notion 的電影資料
+				// console.log('Notion Movies:', notionMovies);  // 檢查 Notion 的電影資料
 
         for (const notionMovie of notionMovies) {
             const { title, rating_gg, rank_imdb } = notionMovie;
-
 						// 使用 TMDB 搜索電影
             let tmdbResults;
             try {
-                tmdbResults = await fetchFromTMDB(`https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(title)}&include_adult=false&language=en-US&page=1`);
+                tmdbResults = await fetchFromTMDB(`https://api.themoviedb.org/3/search/movie?query=${title}&include_adult=false&language=en-US&page=1`);
                 
-								console.log(`TMDB Results for ${title}:`, tmdbResults);
+								// console.log(`TMDB Results for ${title}:`);
                 // 檢查是否有結果返回
                 if (tmdbResults.results.length === 0) {
                     console.log(`No match found for movie: ${title}`);
@@ -34,34 +33,38 @@ export const syncMoviesFromNotion = async (req, res) => {
             }
 
             const matchedMovie = tmdbResults.results[0];  // 假設第一個結果是最相關的
+						
+						if (!matchedMovie) {
+								console.log(`No match found for ${title} in TMDB. Proceeding with Notion data.`);
+								matchedMovie = { id: null, poster_path: null, overview: null, vote_average: null, vote_count: null, release_date: null };  // 允許沒有 TMDB 結果的電影
+						}
 
-            if (matchedMovie) {
-                // 將 TMDB 和 Notion 的資料結合，創建電影項目
-                const movie = {
-                    name: title,  // Notion 的 title
-                    id: matchedMovie.id,  // TMDB ID
-                    poster_path: matchedMovie.poster_path,  // TMDB 海報
-                    overview: matchedMovie.overview,  // TMDB 簡介
-                    vote_average: matchedMovie.vote_average,  // TMDB 評分
-                    vote_count: matchedMovie.vote_count,  // TMDB 評價次數
-                    first_air_date: matchedMovie.release_date,  // TMDB 首映日期
-                    rating_gg,  // Notion 中的 GG 評分
-                    rank_imdb  // Notion 中的 IMDB 排名
-                };
+						// 繼續建立電影資料，使用 Notion 的資料
+						const movie = {
+								name: title,
+								id: matchedMovie.id,
+								poster_path: matchedMovie.poster_path,
+								overview: matchedMovie.overview,
+								vote_average: matchedMovie.vote_average,
+								vote_count: matchedMovie.vote_count,
+								first_air_date: matchedMovie.release_date,
+								rating_gg: !isNaN(rating_gg) ? rating_gg : 0,  // 如果 rating_gg 是空，設為 0
+								rank_imdb: !isNaN(rank_imdb) ? rank_imdb : 0   // 如果 rank_imdb 是空，設為 0
+						};
 
-                // 分配到相應的清單
-                if (rank_imdb > 0 && rank_imdb <= 100) {
-                    imdbTop100.push(movie);  // 排名前 100 的電影
-                }
-                
-                if (rating_gg > 8) {
-                    ggRecommend.push(movie);  // GG 評分大於 8 的電影
-                }
+						// 確保所有電影（無論有無 TMDB 資料）都被處理
+						if (rank_imdb > 0 && rank_imdb <= 100) {
+								imdbTop100.push(movie);  // 排名前 100 的電影
+						}
 
-                if (rating_gg > 0) {
-                    ggWatched.push(movie);  // GG 評分不為 0 的電影
-                }
-            }
+						if (rating_gg > 8) {
+								ggRecommend.push(movie);  // GG 評分大於 8 的電影
+						}
+
+						if (rating_gg !== 0) {
+								ggWatched.push(movie);  // GG 評分不為 0 的電影
+						}
+
         }
 
         // 創建 IMDB Top 100 清單並保存到 MongoDB

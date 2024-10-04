@@ -8,8 +8,8 @@ const itemSchema = new mongoose.Schema({
     vote_average: { type: Number },  
     vote_count: { type: Number },  
     first_air_date: { type: String },  
-    rating_gg: { type: Number },  // Notion 中的 GG 評分
-    rank_imdb: { type: Number }  // Notion 中的 IMDB 排名
+    rating_gg: { type: Number, default: 0 },  // Notion 中的 GG 評分
+    rank_imdb: { type: Number, default: 0 }  // Notion 中的 IMDB 排名
 });
 
 const listSchema = new mongoose.Schema({
