@@ -4,10 +4,9 @@ import { List } from '../models/list.model.js';
 
 export const syncMoviesFromNotion = async (req, res) => {
     try {
-        // 從 Notion 獲取電影資料
+        // 從 Notion DB 獲取電影資料
         const notionMovies = await fetchMoviesFromNotion();
 
-        // 用來保存不同清單的電影
         const imdbTop100 = [];
         const ggRecommend = [];
         const ggWatched = [];
@@ -16,7 +15,7 @@ export const syncMoviesFromNotion = async (req, res) => {
 
         for (const notionMovie of notionMovies) {
             const { title, rating_gg, rank_imdb } = notionMovie;
-						// 使用 TMDB 搜索電影
+						// 用 TMDB 搜索電影
             let tmdbResults;
             try {
                 tmdbResults = await fetchFromTMDB(`https://api.themoviedb.org/3/search/movie?query=${title}&include_adult=false&language=en-US&page=1`);
