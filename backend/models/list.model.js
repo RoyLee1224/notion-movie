@@ -1,20 +1,15 @@
 import mongoose from 'mongoose';
 
 const itemSchema = new mongoose.Schema({
-  backdrop_path: { type: String },
-  id: { type: Number, required: true },
-  name: { type: String, required: true },
-  original_name: { type: String },
-  overview: { type: String },
-  poster_path: { type: String },
-  media_type: { type: String, enum: ['tv', 'movie'], required: true },
-  genre_ids: [{ type: Number }],
-  first_air_date: { type: String },
-  vote_average: { type: Number },
-  vote_count: { type: Number },
-  origin_country: [{ type: String }],
-  rating_gg:{ type: Number },
-  rank_imdb:{ type: Number }
+    name: { type: String, required: true },
+    id: { type: Number, required: true },  
+    poster_path: { type: String },  
+    overview: { type: String },  
+    vote_average: { type: Number },  
+    vote_count: { type: Number },  
+    first_air_date: { type: String },  
+    rating_gg: { type: Number },  // Notion 中的 GG 評分
+    rank_imdb: { type: Number }  // Notion 中的 IMDB 排名
 });
 
 const listSchema = new mongoose.Schema({

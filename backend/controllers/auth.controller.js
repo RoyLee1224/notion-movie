@@ -44,10 +44,11 @@ export async function signup(req, res) {
 			password: hashedPassword,
 			username,
 			image,
+			isAdmin: false,
 		});
     //postman test
 
-		generateTokenAndSetCookie(newUser._id, res);
+		generateTokenAndSetCookie(newUser._id,newUser.isAdmin, res);
 		await newUser.save();
     
     //remove password from the res
@@ -83,7 +84,7 @@ export async function login(req, res) {
 			return res.status(400).json({ success: false, message: "Invalid credentials" });
 		}
 
-		generateTokenAndSetCookie(user._id, res);
+		generateTokenAndSetCookie(user._id,user.isAdmin, res);
 
 		res.status(200).json({
 			success: true,
