@@ -7,6 +7,7 @@ import movieRoutes from "./routes/movie.route.js"
 import tvRoutes from "./routes/tv.route.js"
 import searchRoutes from "./routes/search.route.js"
 import notionRoutes from "./routes/notion.route.js";
+import listRoutes from "./routes/list.route.js";
 
 import { ENV_VARS } from "./config/envVars.js";
 import { connectDB } from "./config/db.js";
@@ -27,6 +28,7 @@ app.use("/api/v1/tv", protectRoute,tvRoutes)
 app.use("/api/v1/search", protectRoute,searchRoutes)
 // app.use("/api/v1/list",listRoutes)
 
+app.use("/api/v1/lists", protectRoute, listRoutes);  // 新增 list 路由的註冊
 app.use("/api/v1/notion", protectRoute, notionRoutes);
 
 app.listen(PORT, () => {
