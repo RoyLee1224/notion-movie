@@ -18,7 +18,7 @@ const AuthScreen = () => {
         <img
           src="/netflix-logo.png"
           alt="Netflix Logo"
-          className="w-32 md:w-52"
+          className="w-32 md:w-40"
         />
         <Link to={'/login'} className="text-white bg-red-600 py-1 px-2 rounded">
           Sign In
