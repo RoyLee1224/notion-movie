@@ -26,7 +26,7 @@ const HomeScreen = () => {
 
   return (
     <>
-      <div className="relative h-screen text-white">
+      <div className="relative h-screen text-white ">
         <Navbar />
 
         {/* COOL OPTIMIZATION HACK FOR IMAGES */}
@@ -37,21 +37,29 @@ const HomeScreen = () => {
         <img
           src={ORIGINAL_IMG_BASE_URL + trendingContent?.backdrop_path}
           alt="Hero img"
-          className="absolute top-0 left-0 w-full h-full object-cover -z-49 "
+          className="absolute top-0 left-0 w-full h-full object-cover -z-51"
           onLoad={() => {
             setImgLoading(false);
           }}
         />
+        <img
+          src={ORIGINAL_IMG_BASE_URL + trendingContent?.backdrop_path}
+          alt="Hero img"
+          className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${
+            imgLoading ? 'opacity-0' : 'opacity-100'
+          } -z-51`} // Transition opacity for a smooth fade-in effect
+          onLoad={() => setImgLoading(false)} // Set loading to false after image loads
+        />
 
         <div
-          className="absolute top-0 left-0 w-full h-full bg-black/50 -z-50"
+          className="absolute top-0 left-0 w-full h-full bg-black/50 -z-51"
           aria-hidden="true"
         />
 
         <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center px-8 md:px-16 lg:px-32">
           <div
             className="bg-gradient-to-b from-black via-transparent to-transparent 
-					absolute w-full h-full top-0 left-0 -z-5"
+					absolute w-full h-full top-0 left-0 -z-10"
           />
 
           <div className="max-w-2xl">
