@@ -42,14 +42,6 @@ const HomeScreen = () => {
             setImgLoading(false);
           }}
         />
-        <img
-          src={ORIGINAL_IMG_BASE_URL + trendingContent?.backdrop_path}
-          alt="Hero img"
-          className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${
-            imgLoading ? 'opacity-0' : 'opacity-100'
-          } -z-51`} // Transition opacity for a smooth fade-in effect
-          onLoad={() => setImgLoading(false)} // Set loading to false after image loads
-        />
 
         <div
           className="absolute top-0 left-0 w-full h-full bg-black/50 -z-51"

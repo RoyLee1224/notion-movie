@@ -37,7 +37,7 @@ const Navbar = () => {
             className="hover:underline"
             onClick={() => setContentType('tv')}
           >
-            Tv Shows
+            Series
           </Link>
           <Link to="/history" className="hover:underline">
             Search History
