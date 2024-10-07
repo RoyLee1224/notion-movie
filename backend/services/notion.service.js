@@ -1,5 +1,6 @@
 import { Client } from '@notionhq/client';
 import { ENV_VARS } from '../config/envVars.js';
+import { response } from 'express';
 
 const notion = new Client({ auth: ENV_VARS.NOTION_API_KEY });
 
@@ -35,19 +36,31 @@ export const fetchMoviesFromNotion = async () => {
                 start_cursor: startCursor,
             });
 
-            const fetchedMovies = response.results.map(page => ({
+            // const fetchedMovies = response.results.map(page => ({
+            //     title: page.properties.Title.title[0]?.text?.content || 'No Title',
+            //     rating_gg: page.properties.Rating?.number ?? null,  
+            //     rank_imdb: page.properties.imdb?.number ?? null,
+            //     original_name: page.properties['original name']|| null,
+            // }));
+            const fetchedMovies = response.results.map(page => {
+            const movie = {
                 title: page.properties.Title.title[0]?.text?.content || 'No Title',
                 rating_gg: page.properties.Rating?.number ?? null,  
-                rank_imdb: page.properties.imdb?.number ?? null
-            }));
+                rank_imdb: page.properties.imdb?.number ?? null,
+                original_name: page.properties['original name']?.rich_text[0]?.text?.content || null,
+            };
+
+            console.log(`Fetched movie:`, movie);  // 打印每個電影的資訊
+            return movie;
+            });
 
             movies = [...movies, ...fetchedMovies];
 
             hasMore = response.has_more;
             startCursor = response.next_cursor;
         }
-
         return movies;  // 返回所有電影清單
+
     } catch (error) {
         console.error('Failed to fetch movies from Notion:', error.message);
         throw new Error('Failed to fetch movies from Notion');

@@ -1,5 +1,5 @@
-const WatchHistoryPage = () => {
-  return <div>WatchHistoryPage</div>;
+const WatchListPage = () => {
+  return <div>WatchListPage</div>;
 };
 
-export default WatchHistoryPage;
+export default WatchListPage;

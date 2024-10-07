@@ -20,7 +20,7 @@ export const deleteAllLists = async (req, res) => {
 
 export const getImdbList = async (req, res) => {
   try {
-    const imdbList = await List.findOne({ name: 'IMDB Top 100' });
+    const imdbList = await List.findOne({ name: 'IMDB Top 100' }).sort({ imdb_rank: 1 });
     if (!imdbList) return res.status(404).json({ message: 'IMDB Top 100 list not found' });
     res.json(imdbList);
   } catch (error) {

@@ -46,7 +46,7 @@ const Navbar = () => {
             吉選電影
           </Link>
           <Link to="/watched" className="hover:underline hover:text-gray-300">
-            Watch History
+            Watch List
           </Link>
           <Link to="/history" className="hover:underline hover:text-gray-300">
             Search History
@@ -85,6 +85,27 @@ const Navbar = () => {
             onClick={toggleMobileMenu}
           >
             Tv Shows
+          </Link>
+          <Link
+            to={'/imdb'}
+            className="block hover:underline p-2"
+            onClick={toggleMobileMenu}
+          >
+            IMDB top 100
+          </Link>
+          <Link
+            to={'/recommend'}
+            className="block hover:underline p-2"
+            onClick={toggleMobileMenu}
+          >
+            吉選電影
+          </Link>
+          <Link
+            to={'/watched'}
+            className="block hover:underline p-2"
+            onClick={toggleMobileMenu}
+          >
+            Watch List
           </Link>
           <Link
             to={'/history'}

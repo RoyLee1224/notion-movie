@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const itemSchema = new mongoose.Schema({
     name: { type: String, required: true },
+    original_name: { type: String },
     id: { type: Number, required: true },  
     poster_path: { type: String },  
     overview: { type: String },  

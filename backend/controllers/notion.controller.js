@@ -13,30 +13,34 @@ export const syncMoviesFromNotion = async (req, res) => {
 				// console.log('Notion Movies:', notionMovies);
 
         for (const notionMovie of notionMovies) {
-            const { title, rating_gg, rank_imdb } = notionMovie;
+            const { title, rating_gg, rank_imdb, original_name } = notionMovie;
+            
+            const searchQuery = original_name || title;
+
             let tmdbResults;
             try {
-                tmdbResults = await fetchFromTMDB(`https://api.themoviedb.org/3/search/movie?query=${title}&include_adult=false&language=en-US&page=1`);
+                tmdbResults = await fetchFromTMDB(`https://api.themoviedb.org/3/search/movie?query=${searchQuery}&include_adult=false&language=en-US&page=1`);
                 
 								// console.log(`TMDB Results for ${title}:`);
                 if (tmdbResults.results.length === 0) {
-                    console.log(`No match found for movie: ${title}`);
+                    console.log(`No match found for movie: ${searchQuery}`);
                     continue;  
                 }
             } catch (error) {
-                console.error(`Error fetching TMDB data for movie: ${title}`, error.message);
+                console.error(`Error fetching TMDB data for movie: ${searchQuery}`, error.message);
                 continue;  
             }
 
             const matchedMovie = tmdbResults.results[0];  // 假設第一個結果是最相關的
 						
 						if (!matchedMovie) {
-								console.log(`No match found for ${title} in TMDB. Proceeding with Notion data.`);
+								console.log(`No match found for ${searchQuery} in TMDB. Proceeding with Notion data.`);
 								matchedMovie = { id: null, poster_path: null, overview: null, vote_average: null, vote_count: null, release_date: null }; 
 						}
 
 						const movie = {
 								name: title,
+                                original_name: original_name || null,
 								id: matchedMovie.id,
 								poster_path: matchedMovie.poster_path,
 								overview: matchedMovie.overview,
@@ -55,14 +59,14 @@ export const syncMoviesFromNotion = async (req, res) => {
 								ggRecommend.push(movie);
 						}
 
-						if (rating_gg !== 0) {
+						if (rating_gg !== null) {
 								ggWatched.push(movie); 
 						}
 
         }
 
-        // 創建 IMDB Top 100 清單並保存到 MongoDB
         if (imdbTop100.length > 0) {
+            imdbTop100.sort((a, b) => a.rank_imdb - b.rank_imdb);
             const imdbList = new List({
                 name: 'IMDB Top 100',
                 created_by: 'Admin',
@@ -76,8 +80,8 @@ export const syncMoviesFromNotion = async (req, res) => {
             await imdbList.save();
         }
 
-        // 創建 GG Recommend 清單並保存到 MongoDB
         if (ggRecommend.length > 0) {
+            ggRecommend.sort((a, b) => b.rating_gg - a.rating_gg);
             const recommendList = new List({
                 name: 'Recommend',
                 created_by: 'Admin',
@@ -91,8 +95,8 @@ export const syncMoviesFromNotion = async (req, res) => {
             await recommendList.save();
         }
 
-        // 創建 GG 觀影紀錄清單並保存到 MongoDB
         if (ggWatched.length > 0) {
+            ggWatched.sort((a, b) => b.rating_gg - a.rating_gg);
             const watchedList = new List({
                 name: 'Watch List',
                 created_by: 'Admin',

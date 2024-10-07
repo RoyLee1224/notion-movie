@@ -14,7 +14,6 @@ import NotFoundPage from './pages/home/404';
 import IMDBPage from './pages/IMDBPage';
 import RecommendPage from './pages/RecommendPage';
 import WatchHistoryPage from './pages/WatchHistoryPage';
-// import NotFoundPage from './pages/404';
 
 function App() {
   const { user, isCheckingAuth, authCheck } = useAuthStore();
