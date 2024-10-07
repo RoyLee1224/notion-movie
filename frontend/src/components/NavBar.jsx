@@ -24,22 +24,31 @@ const Navbar = () => {
         </Link>
 
         {/* desktop navbar items */}
-        <div className="hidden sm:flex gap-2 items-center">
+        <div className="hidden sm:flex gap-10 items-center">
           <Link
             to="/"
-            className="hover:underline"
+            className="hover:underline hover:text-gray-300"
             onClick={() => setContentType('movie')}
           >
             Movies
           </Link>
           <Link
             to="/"
-            className="hover:underline"
+            className="hover:underline hover:text-gray-300"
             onClick={() => setContentType('tv')}
           >
             Series
           </Link>
-          <Link to="/history" className="hover:underline">
+          <Link to="/imdb" className="hover:underline hover:text-gray-300">
+            IMDB Top 100
+          </Link>
+          <Link to="/recommend" className="hover:underline hover:text-gray-300">
+            吉選電影
+          </Link>
+          <Link to="/watched" className="hover:underline hover:text-gray-300">
+            Watch History
+          </Link>
+          <Link to="/history" className="hover:underline hover:text-gray-300">
             Search History
           </Link>
         </div>

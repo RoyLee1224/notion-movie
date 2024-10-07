@@ -10,6 +10,10 @@ import { useEffect } from 'react';
 import { Loader } from 'lucide-react';
 import SearchPage from './pages/SearchPage';
 import SearchHistoryPage from './pages/SearchHistoryPage';
+import NotFoundPage from './pages/home/404';
+import IMDBPage from './pages/IMDBPage';
+import RecommendPage from './pages/RecommendPage';
+import WatchHistoryPage from './pages/WatchHistoryPage';
 // import NotFoundPage from './pages/404';
 
 function App() {
@@ -49,11 +53,26 @@ function App() {
           path="/search"
           element={user ? <SearchPage /> : <Navigate to={'/login'} />}
         />
+
+        <Route
+          path="/imdb"
+          element={user ? <IMDBPage /> : <Navigate to={'/login'} />}
+        />
+
+        <Route
+          path="/recommend"
+          element={user ? <RecommendPage /> : <Navigate to={'/login'} />}
+        />
+        <Route
+          path="/watched"
+          element={user ? <WatchHistoryPage /> : <Navigate to={'/login'} />}
+        />
+
         <Route
           path="/history"
           element={user ? <SearchHistoryPage /> : <Navigate to={'/login'} />}
         />
-        {/* <Route path="/*" element={<NotFoundPage />} /> */}
+        <Route path="/*" element={<NotFoundPage />} />
       </Routes>
       <Footer />
 

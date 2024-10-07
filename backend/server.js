@@ -26,9 +26,8 @@ app.use("/api/v1/auth",authRoutes)
 app.use("/api/v1/movie",protectRoute, movieRoutes)
 app.use("/api/v1/tv", protectRoute,tvRoutes)
 app.use("/api/v1/search", protectRoute,searchRoutes)
-// app.use("/api/v1/list",listRoutes)
 
-app.use("/api/v1/lists", protectRoute, listRoutes);  // 新增 list 路由的註冊
+app.use("/api/v1/list", protectRoute, listRoutes);
 app.use("/api/v1/notion", protectRoute, notionRoutes);
 
 app.listen(PORT, () => {

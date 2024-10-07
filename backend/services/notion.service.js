@@ -31,23 +31,20 @@ export const fetchMoviesFromNotion = async () => {
         while (hasMore) {
             const response = await notion.databases.query({
                 database_id: ENV_VARS.NOTION_DATABASE_ID,
-                page_size: 100,  // 每次最多取100筆資料
-                start_cursor: startCursor,  // 如果有更多的資料，使用 cursor 來獲取
+                page_size: 100, 
+                start_cursor: startCursor,
             });
 
-            // 將 Notion 頁面轉換為所需的電影格式
             const fetchedMovies = response.results.map(page => ({
                 title: page.properties.Title.title[0]?.text?.content || 'No Title',
-                rating_gg: page.properties.Rating?.number ?? null,  // 包括 null 作為合法值
-                rank_imdb: page.properties.imdb?.number ?? null  // 包括 null 作為合法值
+                rating_gg: page.properties.Rating?.number ?? null,  
+                rank_imdb: page.properties.imdb?.number ?? null
             }));
 
-            // 合併每次的結果
             movies = [...movies, ...fetchedMovies];
 
-            // 檢查是否還有更多資料
             hasMore = response.has_more;
-            startCursor = response.next_cursor;  // 更新 cursor
+            startCursor = response.next_cursor;
         }
 
         return movies;  // 返回所有電影清單
