@@ -6,7 +6,7 @@ export const syncMoviesFromNotion = async (req, res) => {
     try {
         const notionMovies = await fetchMoviesFromNotion();
 
-        const imdbTop100 = [];
+        const imdbTop = [];
         const ggRecommend = [];
         const ggWatched = [];
 
@@ -49,29 +49,21 @@ export const syncMoviesFromNotion = async (req, res) => {
                     rank_imdb: !isNaN(rank_imdb) ? rank_imdb : 0
             };
 
-            if (rank_imdb > 0 && rank_imdb <= 100) {
-                    imdbTop100.push(movie);
-            }
+            if (rank_imdb !== null) imdbTop.push(movie);
 
-            if (rating_gg > 8) {
-                    ggRecommend.push(movie);
-
-            }
-
-            if (rating_gg !== null) {
-                    ggWatched.push(movie); 
-            }
+            if (rating_gg > 8) ggRecommend.push(movie);
+            if (rating_gg !== null) ggWatched.push(movie); 
         }
 
-        if (imdbTop100.length > 0) {
-            imdbTop100.sort((a, b) => a.rank_imdb - b.rank_imdb);
+        if (imdbTop.length > 0) {
+            imdbTop.sort((a, b) => a.rank_imdb - b.rank_imdb);
             const imdbList = new List({
-                name: 'IMDB Top 100',
+                name: 'IMDB Top',
                 created_by: 'Admin',
-                description: 'IMDB Top 100',
+                description: 'IMDB Top',
                 id: Math.floor(Math.random() * 1000000),
-                item_count: imdbTop100.length,
-                items: imdbTop100,
+                item_count: imdbTop.length,
+                items: imdbTop,
             });
             await imdbList.save();
         }

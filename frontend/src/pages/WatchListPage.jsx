@@ -95,7 +95,7 @@ const WatchListPage = () => {
                 </Link>
                 <Link
                   to={`/watch/${item.id}`}
-                  className="bg-gray-500 text-white hover:bg-white/80 font-bold py-1 sm:py-2 px-3 sm:px-4 rounded flex items-center text-sm hidden md:flex"
+                  className="bg-gray-500 text-white hover:bg-white/80 font-bold py-1 sm:py-2 px-3 sm:px-4 rounded items-center text-sm hidden md:flex"
                 >
                   <Info className="size-6 mr-2" />
                   Info

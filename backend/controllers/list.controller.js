@@ -18,15 +18,27 @@ export const deleteAllLists = async (req, res) => {
     }
 };
 
+
 export const getImdbList = async (req, res) => {
-  try {
-    const imdbList = await List.findOne({ name: 'IMDB Top 100' }).sort({ imdb_rank: 1 });
-    if (!imdbList) return res.status(404).json({ message: 'IMDB Top 100 list not found' });
-    res.json(imdbList);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching IMDB Top 100 list', error });
-  }
+    try {
+        const yearFilter = req.query.year ? parseInt(req.query.year) : null;
+
+        let imdbList = await List.findOne({ name: 'IMDB Top' });
+
+        if (yearFilter) {
+            imdbList.items = imdbList.items.filter((movie) => {
+                const releaseYear = new Date(movie.first_air_date).getFullYear();
+                return releaseYear >= yearFilter;
+            });
+        }
+
+        res.status(200).json(imdbList);
+    } catch (error) {
+        console.error('Error fetching IMDB Top list:', error);
+        res.status(500).json({ message: 'Failed to fetch IMDB Top list' });
+    }
 };
+
 
 export const getRecommendList = async (req, res) => {
   try {

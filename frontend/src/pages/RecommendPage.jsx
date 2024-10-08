@@ -1,4 +1,4 @@
-import useGetContent from '../hooks/useGetContent';
+import useGetContent from '../hooks/useGetContent'; // 使用推薦內容的 hook
 import Navbar from '../components/NavBar';
 import { Link } from 'react-router-dom';
 import { Info, Play } from 'lucide-react';
@@ -54,7 +54,7 @@ const RecommendPage = () => {
                 </Link>
                 <Link
                   to={`/info/${item.id}`}
-                  className="bg-gray-500 text-white hover:bg-white/80 font-bold py-1 sm:py-2 px-3 sm:px-4 rounded flex items-center text-sm hidden md:flex"
+                  className="bg-gray-500 text-white hover:bg-white/80 font-bold py-1 sm:py-2 px-3 sm:px-4 rounded items-center text-sm hidden md:flex"
                 >
                   <Info className="size-6 mr-2" />
                   Info
