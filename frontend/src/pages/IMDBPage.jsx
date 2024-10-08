@@ -1,10 +1,10 @@
-import useGetIMDBContent from '../hooks/useGetIMDBContent';
+import useGetContent from '../hooks/useGetContent';
 import Navbar from '../components/NavBar';
 import { Link } from 'react-router-dom';
 import { Info, Play } from 'lucide-react';
 
 const IMDBPage = () => {
-  const { IMDBContent, loading } = useGetIMDBContent();
+  const { content, loading } = useGetContent('imdb');
 
   if (loading) {
     return (
@@ -25,7 +25,7 @@ const IMDBPage = () => {
 
         {/* 手機顯示兩欄，較大屏幕則顯示更多欄 */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {IMDBContent?.items.map((item) => (
+          {content?.items.map((item) => (
             <div
               key={item.id}
               className="bg-gray-800 p-2 sm:p-3 rounded-lg shadow-md text-center flex flex-col justify-between h-full"

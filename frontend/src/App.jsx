@@ -13,7 +13,7 @@ import SearchHistoryPage from './pages/SearchHistoryPage';
 import NotFoundPage from './pages/home/404';
 import IMDBPage from './pages/IMDBPage';
 import RecommendPage from './pages/RecommendPage';
-import WatchHistoryPage from './pages/WatchHistoryPage';
+import WatchListPage from './pages/WatchListPage';
 
 function App() {
   const { user, isCheckingAuth, authCheck } = useAuthStore();
@@ -64,7 +64,7 @@ function App() {
         />
         <Route
           path="/watched"
-          element={user ? <WatchHistoryPage /> : <Navigate to={'/login'} />}
+          element={user ? <WatchListPage /> : <Navigate to={'/login'} />}
         />
 
         <Route
