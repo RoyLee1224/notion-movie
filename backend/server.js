@@ -30,6 +30,12 @@ app.use("/api/v1/search", protectRoute,searchRoutes)
 app.use("/api/v1/list", protectRoute, listRoutes);
 app.use("/api/v1/notion", protectRoute, notionRoutes);
 
+app.use((req, res, next) => {
+  req.setTimeout(20000); // 20 seconds
+  next();
+});
+
+
 app.listen(PORT, () => {
 	console.log("Server started at http://localhost:"+PORT);
   connectDB();

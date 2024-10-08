@@ -10,6 +10,13 @@ const IMDBPage = () => {
     `imdb${filterByYear ? '?year=1990' : ''}`
   );
 
+  // Calculate watched percentage
+  const watchedCount =
+    content?.items.filter((item) => item.rating_gg > 0).length || 0;
+  const totalCount = content?.items.length || 0;
+  const completionPercentage =
+    totalCount > 0 ? Math.round((watchedCount / totalCount) * 100) : 0;
+
   if (loading) {
     return (
       <div className="h-screen text-white relative">
@@ -25,8 +32,21 @@ const IMDBPage = () => {
     <div className="text-white bg-black min-h-screen">
       <Navbar />
       <div className="p-4">
+        <div className="relative w-full bg-gray-700 h-6 rounded-lg overflow-hidden mb-4">
+          <div
+            className="bg-blue-500 h-full"
+            style={{
+              width: `${completionPercentage}%`,
+              transition: 'width 1s ease-in-out',
+            }}
+          ></div>
+          <div className="absolute inset-0 flex items-center justify-center text-lg font-bold">
+            Watched: {completionPercentage}%
+          </div>
+        </div>
+
         <h1 className="text-4xl font-bold mb-8">
-          {filterByYear ? 'IMDB Top 100 (After 1990)' : 'IMDB Top 100'}
+          IMDB Top 100 {filterByYear && '(1990 and later)'}
         </h1>
         <button
           className="bg-white text-black hover:bg-white/80 py-2 px-4 rounded mb-6"
@@ -35,7 +55,6 @@ const IMDBPage = () => {
           {filterByYear ? 'Show All' : 'Filter by 1990'}
         </button>
 
-        {/* 手機顯示兩欄，較大屏幕則顯示更多欄 */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {content?.items.map((item, index) => (
             <div
@@ -43,15 +62,11 @@ const IMDBPage = () => {
               className="bg-gray-800 p-2 sm:p-3 rounded-lg shadow-md text-center flex flex-col justify-between h-full"
             >
               <div>
-                {/* 手機縮小圖片高度，較大螢幕保持原本高度 */}
                 <img
                   src={`https://image.tmdb.org/t/p/w300${item.poster_path}`}
                   alt={item.name}
                   className="rounded mb-2 h-60 sm:h-72 md:h-80 w-full object-contain"
                 />
-                {/* <h2 className="text-base sm:text-lg font-bold truncate">
-                  #{item.rank_imdb} {item.name}
-                </h2> */}
                 <h2 className="text-base sm:text-lg font-bold truncate">
                   #{index + 1} {item.name}
                 </h2>
@@ -62,7 +77,6 @@ const IMDBPage = () => {
                 </p>
               </div>
 
-              {/* 手機隱藏 Info 按鈕 */}
               <div className="mt-1 sm:mt-2 flex flex-col md:flex-row justify-center gap-2">
                 <Link
                   to={`/watch/${item.id}`}
