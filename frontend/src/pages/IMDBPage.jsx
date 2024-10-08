@@ -10,7 +10,6 @@ const IMDBPage = () => {
     `imdb${filterByYear ? '?year=1990' : ''}`
   );
 
-  // Calculate watched percentage
   const watchedCount =
     content?.items.filter((item) => item.rating_gg > 0).length || 0;
   const totalCount = content?.items.length || 0;
@@ -34,7 +33,7 @@ const IMDBPage = () => {
       <div className="p-4">
         <div className="relative w-full bg-gray-700 h-6 rounded-lg overflow-hidden mb-4">
           <div
-            className="bg-blue-500 h-full"
+            className="bg-red-600 h-full"
             style={{
               width: `${completionPercentage}%`,
               transition: 'width 1s ease-in-out',
