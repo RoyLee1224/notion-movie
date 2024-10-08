@@ -26,10 +26,14 @@ export const getImdbList = async (req, res) => {
         let imdbList = await List.findOne({ name: 'IMDB Top' });
 
         if (yearFilter) {
-            imdbList.items = imdbList.items.filter((movie) => {
-                const releaseYear = new Date(movie.first_air_date).getFullYear();
-                return releaseYear >= yearFilter;
-            });
+            imdbList.items = imdbList.items
+                .filter((movie) => {
+                    const releaseYear = new Date(movie.first_air_date).getFullYear();
+                    return releaseYear >= yearFilter;
+                })
+                .slice(0, 100);
+        } else {
+            imdbList.items = imdbList.items.slice(0, 100);
         }
 
         res.status(200).json(imdbList);

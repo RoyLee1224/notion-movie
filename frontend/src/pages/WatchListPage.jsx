@@ -41,10 +41,10 @@ const WatchListPage = () => {
                   selectedGenre === parseInt(genreId) ? null : parseInt(genreId)
                 )
               }
-              className={`px-4 py-2 rounded ${
+              className={`px-4 py-2 rounded transition duration-300 ${
                 selectedGenre === parseInt(genreId)
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-500 text-gray-200'
+                  ? 'bg-blue-500 text-white hover:bg-blue-400'
+                  : 'bg-gray-500 text-gray-200 hover:bg-gray-400'
               }`}
             >
               {genreName}

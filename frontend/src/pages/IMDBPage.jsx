@@ -1,10 +1,14 @@
+import { useState } from 'react';
 import useGetContent from '../hooks/useGetContent';
 import Navbar from '../components/NavBar';
 import { Link } from 'react-router-dom';
 import { Info, Play } from 'lucide-react';
 
 const IMDBPage = () => {
-  const { content, loading } = useGetContent('imdb');
+  const [filterByYear, setFilterByYear] = useState(false);
+  const { content, loading } = useGetContent(
+    `imdb${filterByYear ? '?year=1990' : ''}`
+  );
 
   if (loading) {
     return (
@@ -21,11 +25,19 @@ const IMDBPage = () => {
     <div className="text-white bg-black min-h-screen">
       <Navbar />
       <div className="p-4">
-        <h1 className="text-4xl font-bold mb-8">IMDB Top 100</h1>
+        <h1 className="text-4xl font-bold mb-8">
+          {filterByYear ? 'IMDB Top 100 (After 1990)' : 'IMDB Top 100'}
+        </h1>
+        <button
+          className="bg-white text-black hover:bg-white/80 py-2 px-4 rounded mb-6"
+          onClick={() => setFilterByYear(!filterByYear)}
+        >
+          {filterByYear ? 'Show All' : 'Filter by 1990'}
+        </button>
 
         {/* 手機顯示兩欄，較大屏幕則顯示更多欄 */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {content?.items.map((item) => (
+          {content?.items.map((item, index) => (
             <div
               key={item.id}
               className="bg-gray-800 p-2 sm:p-3 rounded-lg shadow-md text-center flex flex-col justify-between h-full"
@@ -37,8 +49,11 @@ const IMDBPage = () => {
                   alt={item.name}
                   className="rounded mb-2 h-60 sm:h-72 md:h-80 w-full object-contain"
                 />
-                <h2 className="text-base sm:text-lg font-bold truncate">
+                {/* <h2 className="text-base sm:text-lg font-bold truncate">
                   #{item.rank_imdb} {item.name}
+                </h2> */}
+                <h2 className="text-base sm:text-lg font-bold truncate">
+                  #{index + 1} {item.name}
                 </h2>
                 <p className="mt-1 sm:mt-2 text-sm sm:text-lg">
                   {item?.release_date?.split('-')[0] ||
