@@ -14,9 +14,12 @@ import { ENV_VARS } from "./config/envVars.js";
 import { connectDB } from "./config/db.js";
 import { protectRoute } from "./middleware/protectRoute.js";
 
+import job from "./cron.js"
+
 dotenv.config();
 
 const app = express();
+job.start()
 
 const PORT = ENV_VARS.PORT
 const __dirname = path.resolve();
