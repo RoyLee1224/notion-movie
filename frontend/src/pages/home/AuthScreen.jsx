@@ -12,7 +12,7 @@ const AuthScreen = () => {
   };
 
   return (
-    <div className="hero-bg relative">
+    <div className="hero-bg relative flex flex-col">
       {/* Navbar */}
       <header className="max-w-6xl mx-auto flex items-center justify-between p-4 pb-10">
         <img
@@ -102,8 +102,8 @@ const AuthScreen = () => {
 
               <div
                 className="flex items-center gap-2 absolute bottom-5 left-1/2 -translate-x-1/2 bg-black
-              w-3/4 lg:w-1/2 h-24 border border-slate-500 rounded-md px-2
-              "
+            w-3/4 lg:w-1/2 h-24 border border-slate-500 rounded-md px-2
+            "
               >
                 <img
                   src="/stranger-things-sm.png"
@@ -165,8 +165,8 @@ const AuthScreen = () => {
             />
             <video
               className="absolute top-2 left-1/2 -translate-x-1/2  h-4/6 z-10
-               max-w-[63%] 
-              "
+              max-w-[63%] 
+            "
               playsInline
               autoPlay={true}
               muted
@@ -184,8 +184,8 @@ const AuthScreen = () => {
       <div className="py-10 bg-black text-white">
         <div
           className="flex max-w-6xl mx-auto items-center justify-center flex-col-reverse md:flex-row
-           px-4 md:px-2
-        "
+          px-4 md:px-2
+      "
         >
           {/* left */}
           <div className="flex-1 relative">
