@@ -1,3 +1,4 @@
+import { User } from "../models/user.model.js";
 import { fetchFromTMDB } from "../services/tmdb.service.js";
 
 export async function getTrendingMovie(req, res) {
@@ -58,3 +59,39 @@ export async function getMoviesByCategory(req, res) {
 		res.status(500).json({ success: false, message: "Internal Server Error" });
 	}
 }
+
+export async function getWatchedMovies(req, res) {
+  try {
+    const user = await User.findById(req.user._id).select('watchedMovies');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    res.status(200).json({ success: true, content: user.watchedMovies });
+  } catch (error) {
+    console.error('Error fetching watched movies:', error);
+    res.status(500).json({ success: false, message: 'Failed to get watched Movies' });
+  }
+}
+
+export const toggleWatchedMovie = async (req, res) => {
+  const movieId = req.params.id;
+
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    if (user.watchedMovies.includes(movieId)) {
+      user.watchedMovies = user.watchedMovies.filter((id) => id !== movieId);
+    } else {
+      user.watchedMovies.push(movieId);
+    }
+
+    await user.save();
+    res.status(200).json({ success: true, watchedMovies: user.watchedMovies });
+  } catch (error) {
+    console.error('Error toggling watched movie status:', error);
+    res.status(500).json({ success: false, message: 'Error toggling watched movie status' });
+  }
+};

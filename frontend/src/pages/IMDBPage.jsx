@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 import useGetContent from '../hooks/useGetContent';
 import Navbar from '../components/NavBar';
 import { Link } from 'react-router-dom';
-import { Info, Play } from 'lucide-react';
+import { Play, CheckCircle, Eye } from 'lucide-react';
 
 const IMDBPage = () => {
   const [filterByYear, setFilterByYear] = useState(false);
@@ -10,8 +11,35 @@ const IMDBPage = () => {
     `imdb${filterByYear ? '?year=1990' : ''}`
   );
 
+  const [watchedMovies, setWatchedMovies] = useState(new Set());
+
+  useEffect(() => {
+    const fetchWatchedMovies = async () => {
+      try {
+        const response = await axios.get(`/api/v1/movie/watched`);
+        setWatchedMovies(new Set(response.data.content));
+      } catch (error) {
+        console.error('Error fetching watched movies', error);
+      }
+    };
+    fetchWatchedMovies();
+  }, []);
+
+  const handleToggleWatched = async (movieId) => {
+    try {
+      await axios.post(`/api/v1/movie/${movieId}/toggle`);
+      setWatchedMovies((prev) => {
+        const updated = new Set(prev);
+        updated.has(movieId) ? updated.delete(movieId) : updated.add(movieId);
+        return updated;
+      });
+    } catch (error) {
+      console.error('Error toggling watched status', error);
+    }
+  };
+
   const watchedCount =
-    content?.items.filter((item) => item.rating_gg > 0).length || 0;
+    content?.items.filter((item) => watchedMovies.has(item.id)).length || 0;
   const totalCount = content?.items.length || 0;
   const completionPercentage =
     totalCount > 0 ? Math.round((watchedCount / totalCount) * 100) : 0;
@@ -84,13 +112,19 @@ const IMDBPage = () => {
                   <Play className="size-6 mr-2 fill-black" />
                   Play
                 </Link>
-                <Link
-                  to={`/info/${item.id}`}
-                  className="bg-gray-500 text-white hover:bg-white/80 font-bold py-1 sm:py-2 px-3 sm:px-4 rounded items-center text-sm hidden md:flex"
+                <button
+                  onClick={() => handleToggleWatched(item.id)}
+                  className={`${
+                    watchedMovies.has(item.id) ? 'bg-green-500' : 'bg-gray-500'
+                  } text-white font-bold py-1 sm:py-2 px-3 sm:px-4 rounded items-center text-sm hidden md:flex`}
                 >
-                  <Info className="size-6 mr-2" />
-                  Info
-                </Link>
+                  {watchedMovies.has(item.id) ? (
+                    <CheckCircle className="mr-2" />
+                  ) : (
+                    <Eye className="mr-2" />
+                  )}
+                  {watchedMovies.has(item.id) ? 'Watched' : 'Mark as Watched'}
+                </button>
               </div>
             </div>
           ))}

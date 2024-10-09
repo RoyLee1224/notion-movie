@@ -6,7 +6,6 @@ import { Trash } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 function formatDate(dateString) {
-  // Create a Date object from the input date string
   const date = new Date(dateString);
 
   const monthNames = [
@@ -23,13 +22,9 @@ function formatDate(dateString) {
     'Nov',
     'Dec',
   ];
-
-  // Extract the month, day, and year from the Date object
   const month = monthNames[date.getUTCMonth()];
   const day = date.getUTCDate();
   const year = date.getUTCFullYear();
-
-  // Return the formatted date string
   return `${month} ${day}, ${year}`;
 }
 

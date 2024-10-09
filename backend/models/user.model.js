@@ -26,6 +26,10 @@ const userSchema = mongoose.Schema({
 	isAdmin:{
 		type:Boolean,
 		default: false,
+	},
+	watchedMovies:{ 
+		type: Array,
+		default:[] 
 	}
 });
 

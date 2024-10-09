@@ -46,7 +46,7 @@ const Navbar = () => {
             吉選電影
           </Link>
           <Link to="/watched" className="hover:underline hover:text-gray-300">
-            Watch List
+            觀影吉錄
           </Link>
           <Link to="/history" className="hover:underline hover:text-gray-300">
             Search History
