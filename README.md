@@ -6,6 +6,11 @@ A full-stack application inspired by Netflix, which enables users to explore, tr
 
 Experience the live demo [here](https://notion-movie.onrender.com/).
 
+![Sign In Demo](assets/signin.gif)
+![Home Screen Demo](assets/homescreen.gif)
+![IMDB Page Demo](assets/imdb.gif)
+![Search Page Demo](assets/search.gif)
+
 ## Features
 
 - **User Authentication**: Sign up, login, and logout functionality with session-based authentication.
