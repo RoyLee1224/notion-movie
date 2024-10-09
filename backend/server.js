@@ -1,6 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import path from "path";
 
 import authRoutes from "./routes/auth.route.js"
 import movieRoutes from "./routes/movie.route.js"
@@ -18,6 +19,7 @@ dotenv.config();
 const app = express();
 
 const PORT = ENV_VARS.PORT
+const __dirname = path.resolve();
 
 app.use(express.json()); //allow parse req.body
 app.use(cookieParser());
@@ -29,6 +31,14 @@ app.use("/api/v1/search", protectRoute,searchRoutes)
 
 app.use("/api/v1/list", protectRoute, listRoutes);
 app.use("/api/v1/notion", protectRoute, notionRoutes);
+
+if (ENV_VARS.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+	app.get("*", (req, res) => {
+		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+	});
+}
 
 app.use((req, res, next) => {
   req.setTimeout(20000); // 20 seconds
