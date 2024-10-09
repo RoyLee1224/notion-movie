@@ -82,14 +82,15 @@ export const toggleWatchedMovie = async (req, res) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    if (user.watchedMovies.includes(movieId)) {
+    const isWatched = user.watchedMovies.includes(movieId);
+    if (isWatched) {
       user.watchedMovies = user.watchedMovies.filter((id) => id !== movieId);
     } else {
       user.watchedMovies.push(movieId);
     }
 
     await user.save();
-    res.status(200).json({ success: true, watchedMovies: user.watchedMovies });
+    res.status(200).json({ success: true, isWatched: !isWatched });
   } catch (error) {
     console.error('Error toggling watched movie status:', error);
     res.status(500).json({ success: false, message: 'Error toggling watched movie status' });

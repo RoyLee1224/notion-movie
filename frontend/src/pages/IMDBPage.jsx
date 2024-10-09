@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import useGetContent from '../hooks/useGetContent';
 import Navbar from '../components/NavBar';
 import { Link } from 'react-router-dom';
-import { Play, CheckCircle, Eye } from 'lucide-react';
+import { CheckCircle, Eye, Info } from 'lucide-react';
 
 const IMDBPage = () => {
   const [filterByYear, setFilterByYear] = useState(false);
@@ -12,12 +12,14 @@ const IMDBPage = () => {
   );
 
   const [watchedMovies, setWatchedMovies] = useState(new Set());
+  const [completionPercentage, setCompletionPercentage] = useState(0);
 
   useEffect(() => {
     const fetchWatchedMovies = async () => {
       try {
         const response = await axios.get(`/api/v1/movie/watched`);
-        setWatchedMovies(new Set(response.data.content));
+        const movieIds = new Set(response.data.content.map(String)); // Ensure IDs are strings
+        setWatchedMovies(movieIds);
       } catch (error) {
         console.error('Error fetching watched movies', error);
       }
@@ -25,24 +27,35 @@ const IMDBPage = () => {
     fetchWatchedMovies();
   }, []);
 
+  useEffect(() => {
+    if (content?.items) {
+      const watchedCount = content.items.filter((item) =>
+        watchedMovies.has(item.id.toString())
+      ).length;
+      const totalCount = content.items.length;
+      setCompletionPercentage(
+        totalCount > 0 ? Math.round((watchedCount / totalCount) * 100) : 0
+      );
+    }
+  }, [watchedMovies, content?.items]);
+
   const handleToggleWatched = async (movieId) => {
     try {
-      await axios.post(`/api/v1/movie/${movieId}/toggle`);
+      // Call API to toggle watched status
+      const response = await axios.post(`/api/v1/movie/${movieId}/toggle`);
+      const { isWatched } = response.data; // Confirm updated watched status
+
       setWatchedMovies((prev) => {
         const updated = new Set(prev);
-        updated.has(movieId) ? updated.delete(movieId) : updated.add(movieId);
+        isWatched
+          ? updated.add(movieId.toString())
+          : updated.delete(movieId.toString());
         return updated;
       });
     } catch (error) {
       console.error('Error toggling watched status', error);
     }
   };
-
-  const watchedCount =
-    content?.items.filter((item) => watchedMovies.has(item.id)).length || 0;
-  const totalCount = content?.items.length || 0;
-  const completionPercentage =
-    totalCount > 0 ? Math.round((watchedCount / totalCount) * 100) : 0;
 
   if (loading) {
     return (
@@ -72,7 +85,7 @@ const IMDBPage = () => {
           </div>
         </div>
 
-        <h1 className="text-4xl font-bold mb-8">
+        <h1 className="text-2xl md:text-4xl font-bold mb-8 ">
           IMDB Top 100 {filterByYear && '(1990 and later)'}
         </h1>
         <button
@@ -89,11 +102,13 @@ const IMDBPage = () => {
               className="bg-gray-800 p-2 sm:p-3 rounded-lg shadow-md text-center flex flex-col justify-between h-full"
             >
               <div>
-                <img
-                  src={`https://image.tmdb.org/t/p/w300${item.poster_path}`}
-                  alt={item.name}
-                  className="rounded mb-2 h-60 sm:h-72 md:h-80 w-full object-contain"
-                />
+                <Link to={`/watch/${item.id}`}>
+                  <img
+                    src={`https://image.tmdb.org/t/p/w300${item.poster_path}`}
+                    alt={item.name}
+                    className="rounded mb-2 h-60 sm:h-72 md:h-80 w-full object-contain cursor-pointer"
+                  />
+                </Link>
                 <h2 className="text-base sm:text-lg font-bold truncate">
                   #{index + 1} {item.name}
                 </h2>
@@ -107,23 +122,25 @@ const IMDBPage = () => {
               <div className="mt-1 sm:mt-2 flex flex-col md:flex-row justify-center gap-2">
                 <Link
                   to={`/watch/${item.id}`}
-                  className="bg-white text-black hover:bg-white/80 font-bold py-1 sm:py-2 px-3 sm:px-4 rounded flex items-center text-sm"
+                  className="bg-gray-500/70 hover:bg-gray-500 text-white py-2 px-4 rounded items-center hidden md:flex"
                 >
-                  <Play className="size-6 mr-2 fill-black" />
-                  Play
+                  <Info className="size-6 mr-2" />
+                  Info
                 </Link>
                 <button
                   onClick={() => handleToggleWatched(item.id)}
                   className={`${
-                    watchedMovies.has(item.id) ? 'bg-green-500' : 'bg-gray-500'
-                  } text-white font-bold py-1 sm:py-2 px-3 sm:px-4 rounded items-center text-sm hidden md:flex`}
+                    watchedMovies.has(item.id.toString())
+                      ? 'bg-red-600 md:hover:bg-red-500'
+                      : 'bg-gray-500 md:hover:bg-gray-400'
+                  } text-white py-2 px-4 rounded flex items-center text-base w-full sm:w-32 transition-colors duration-200`}
                 >
-                  {watchedMovies.has(item.id) ? (
-                    <CheckCircle className="mr-2" />
+                  {watchedMovies.has(item.id.toString()) ? (
+                    <CheckCircle className="mr-1 w-6 h-6" />
                   ) : (
-                    <Eye className="mr-2" />
+                    <Eye className="mr-1 w-6 h-6" />
                   )}
-                  {watchedMovies.has(item.id) ? 'Watched' : 'Mark as Watched'}
+                  {watchedMovies.has(item.id.toString()) ? 'Watched' : 'Watch'}
                 </button>
               </div>
             </div>
